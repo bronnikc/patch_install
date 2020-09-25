@@ -1,0 +1,31 @@
+---
+- name: Unarchive oracle pach
+  unarchive:  
+      src:  "{{patch.archive_url}}"   
+      dest: "{{ patch.temp_dir }}"
+      remote_src: yes 
+      owner: "{{oracledb.user}}"
+      group: "{{oracledb.group}}"
+- name: Patch conflict detection
+  shell: 
+   cmd: $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir ./
+   chdir: '{{patch.temp_dir}}/{{patch.patch_id}}/{{patch.patch_number}}'
+  register:  _or_patch_conflict_detection_output
+
+- include_tasks: display_stdout_or_errors.yml
+  vars: 
+    _or_patch_debug: "{{_or_patch_conflict_detection_output }}"
+  when: ( 
+         or _or_patch_conflict_detection_output.rc|default(0,true) != 0 
+         or _or_patch_conflict_detection_output.stderr|default('',true)|length > 0)
+- name:  Install Patch
+  shell:
+   cmd: '$ORACLE_HOME/OPatch/opatch apply -silent'
+   chdir: '{{patch.temp_dir}}/{{patch.patch_id}}/{{patch.patch_number}}'
+  register: _or_patch_installation_output
+  ignore_errors: True
+- include_tasks: display_stdout_or_errors.yml
+  vars:
+    _or_patch_debug: "{{ _or_patch_installation_output }}" 
+  when:  _or_patch_installation_output.rc|default(0,true) !=0 or _or_patch_conflict_detection_output.stderr|default('',true)|length > 0
+- debug: msg="ready" 

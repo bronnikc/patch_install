@@ -1,0 +1,9 @@
+---
+# defaults file for oracle.opatch
+oracle_version:   "12.2"
+oracle_dbhome:  dbhome_1
+opatch:
+ archive_url: "http://cloud.dcteam.ru/s/uhvM4SNYSkq4j0p/download"
+ version: "12.2.0.1.21"
+ backup_file:   '/tmp/OPatch.zip'
+type_patch: 'db_single'
