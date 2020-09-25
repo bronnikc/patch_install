@@ -27,4 +27,8 @@
   vars:
     _or_patch_debug: "{{ _or_patch_installation_output }}" 
   when:  _or_patch_installation_output.rc|default(0,true) !=0 or _or_patch_conflict_detection_output.stderr|default('',true)|length > 0
-- debug: msg="ready" 
+- shell:
+    cmd: '$ORACLE_HOME/OPatch/opatch lspatches -id'
+  register: _installed_patches
+- debug: msg="installed patch - {{ _installed_patches }}" 
+ 
