@@ -1,0 +1,31 @@
+- name: Unarchive oracle patch ID {{_patch.patch_id}} into {{_patch.temp_dir}}/{{_patch.patch_id}}
+  unarchive:  
+      src:  "{{ _patch.archive_url}}"   
+      dest: "{{ _patch.temp_dir }}"
+      remote_src: yes 
+      owner: "{{oracledb.user}}"
+      group: "{{oracledb.group}}"
+  become: true   
+- name: Patch conflict detection
+  shell: 
+   cmd: $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir {{_patch.temp_dir}}/{{_patch.patch_id}}/{{_patch_num}}
+  with_items:
+   - '{{_patch.patch_number}}'
+  loop_control:
+   loop_var: _patch_num   
+   label: "[check conflict with patch_id {{ _patch_num }}]"
+  register:  _or_patch_conflict_detection_output
+  become: true
+  become_user: '{{oracledb.user }}'  
+
+- name:  Check errors in conflict resolution
+  include_tasks: display_stdout_or_errors.yml
+  vars: 
+    _or_patch_debug: "{{_or_patch_conflict_detection_output_item }}"
+  with_items:
+   - "{{ _or_patch_conflict_detection_output.results|default([],true) }}"  
+  loop_control:
+    loop_var: _or_patch_conflict_detection_output_item
+    label: "{{_or_patch_conflict_detection_output_item._patch_num}} result"
+  when: (   _or_patch_conflict_detection_output.rc|default(0,true) != 0 
+         or _or_patch_conflict_detection_output.stderr|default('',true)|length > 0)

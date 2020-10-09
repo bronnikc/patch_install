@@ -1,7 +1,7 @@
 ---
 # defaults file for oracle.opatch
-oracle_version:   "12.2"
-oracle_dbhome:  dbhome_1
+type_install_patch: 'gi_install'#'db_single что применять opatchauto
+opatch_update: true
 
 opatch:
  archive_url: "http://cloud.dcteam.ru/s/uhvM4SNYSkq4j0p/download"
@@ -11,13 +11,15 @@ opatch:
 
 patch:
  archive_url: "http://cloud.dcteam.ru/s/Ay5XufMvWFmXz2H/download"
- type: 'db_single'
+ #type: '
  temp_dir: '/tmp'
  patch_id: 31305382
- patch_number: 31312468
+ #patch_number: [31312468,31309299,31245159,26839277,30888810]
+ patch_number: [31312468,31309299]
 
 
 home:
- oracle_dbhome:  dbhome_1
- type_home: DB # GI vs DB
+ oracle_dbhome: 
+ oracle_base:
+ type_home: GI # GI vs DB
  oracle_version: "12.2"

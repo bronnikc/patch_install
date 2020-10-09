@@ -1,34 +1,25 @@
 ---
-- name: Unarchive oracle pach
-  unarchive:  
-      src:  "{{patch.archive_url}}"   
-      dest: "{{ patch.temp_dir }}"
-      remote_src: yes 
-      owner: "{{oracledb.user}}"
-      group: "{{oracledb.group}}"
-- name: Patch conflict detection
-  shell: 
-   cmd: $ORACLE_HOME/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -phBaseDir ./
-   chdir: '{{patch.temp_dir}}/{{patch.patch_id}}/{{patch.patch_number}}'
-  register:  _or_patch_conflict_detection_output
-
-- include_tasks: display_stdout_or_errors.yml
-  vars: 
-    _or_patch_debug: "{{_or_patch_conflict_detection_output }}"
-  when: (   _or_patch_conflict_detection_output.rc|default(0,true) != 0 
-         or _or_patch_conflict_detection_output.stderr|default('',true)|length > 0)
 - name:  Install Patch
   shell:
    cmd: '$ORACLE_HOME/OPatch/opatch apply -silent'
-   chdir: '{{patch.temp_dir}}/{{patch.patch_id}}/{{patch.patch_number}}'
-  register: _or_patch_installation_output
+   chdir: '{{patch.temp_dir}}/{{patch.patch_id}}/{{_patch_num}}'
+  with_items:
+   - '{{_patch.patch_number}}'
+  loop_control:
+   loop_var: _patch_num   
+   label: "[install patch {{ _patch_num }}]" 
+  register: _or_patch_installation
   ignore_errors: True
+  become: true
+  become_user: "{{ oracledb.user }}"
 - include_tasks: display_stdout_or_errors.yml
   vars:
     _or_patch_debug: "{{ _or_patch_installation_output }}" 
-  when:  _or_patch_installation_output.rc|default(0,true) !=0 or _or_patch_conflict_detection_output.stderr|default('',true)|length > 0
-- shell:
-    cmd: '$ORACLE_HOME/OPatch/opatch lspatches -id'
-  register: _installed_patches
-- debug: msg="installed patch - {{ _installed_patches.stdout_lines }}" 
+  with_items:
+   - "{{ _or_patch_installation.results|default([],true) }}"  
+  loop_control:
+    loop_var: _or_patch_installation_output
+    label:  "[check error patch installation {{ _or_patch_installation_output._patch_num }}]"
+  #when:  _or_patch_installation_output.rc|default(0,true) !=0  or _or_patch_installation_output.stderr|default('',true)|length > 0
+       
  

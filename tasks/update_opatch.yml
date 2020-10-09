@@ -1,20 +1,20 @@
 ---
  - name: Backup OPatch directory
    archive:
-    path: '{{oracle_home}}/OPatch/*'
+    path: '{{_home.oracle_home}}/OPatch/*'
     dest: '{{opatch.backup_file }}'
     format: zip
    failed_when: False
    tags: bp 
  - name: Delete OPatch folder
    file:
-     path: '{{oracle_home}}/OPatch'
+     path: '{{_home.oracle_home}}/OPatch'
      state: absent 
    tags: bp
  - name: Unpack OPatch
    unarchive:  
       src:  "{{opatch.archive_url}}"   
-      dest: "{{ oracle_home }}"
+      dest: "{{ _home.oracle_home }}"
       remote_src: yes 
       owner: "{{oracledb.user}}"
       group: "{{oracledb.group}}"
@@ -24,7 +24,7 @@
  - name: Restore OPatch
    unarchive:
      src:   '{{opatch.backup_file }}'
-     dest: '{{ oracle_home }}'   
+     dest: '{{ _home.oracle_home }}'   
      remote_src:  yes
    when: not new_opatch.changed
    register: old_opatch

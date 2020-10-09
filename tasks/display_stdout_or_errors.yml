@@ -11,7 +11,7 @@
 - name: asserts that errors found
   assert:
    that: 
-    - "_or_patch_debug.stderr|default('',true) == ''"
+    - "_or_patch_debug.stderr|default('',true) == '' or _or_patch_debug.stderr|default('',true) == 'OPatch Session completed with warnings.'" 
     - "_or_patch_debug.rc|default(0,true) == 0"
    fail_msg: "Command failed" 
   tags:
