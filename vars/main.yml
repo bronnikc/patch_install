@@ -1,13 +1,11 @@
 ---
-oracle_base:  /u01/app/oracle 
-oracle_home: "{{oracle_base+'/product/'+oracle_version+'/'+oracle_dbhome}}" 
-patch:
- archive_url: "http://cloud.dcteam.ru/s/Ay5XufMvWFmXz2H/download"
- type: "{{ type_patch }}"
- temp_dir: '/tmp'
- patch_id: 31305382
- patch_number: 31312468
+
+_home:
+  oracle_base: "{% if home.type_home == 'DB' %}/u01/app/oracle{% else %}/u01/app/grid{% endif %}"
+  oracle_home: "{% if home.type_home == 'DB' %}/u01/app/oracle/product/{{home.oracle_version}}/{{home.oracle_dbhome}}{% else %}/u01/app/{{home.oracle_version}}/grid{% endif %}"
+
+_patch: "{{ patch }}"
+
 oracledb:
   user: oracle
   group: oinstall
-# vars file for oracle.opatch

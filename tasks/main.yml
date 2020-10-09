@@ -1,29 +1,31 @@
 ---  
-- name: Check OPatch version and update OPatch
-  block:
-    - shell:
-       cmd: "{{oracle_home}}/OPatch/opatch lsinventory| grep 'OPatch version' | awk -F':' '{print $2}'"
-      register: opatch_version
-    - name: Compare version
-      set_fact: 
-        current_opatch_version: "{{opatch_version.stdout|trim}}"
-    - include_tasks: update_opatch.yml
-      when: current_opatch_version != opatch.version
-  environment:
-   ORACLE_BASE: "{{oracle_base}}"
-   ORACLE_HOME: "{{oracle_home}}"
-  become: True
-  become_user: "{{oracledb.user}}"
-- name:   Apply_oh_patch
-  block:
-   - include_tasks: apply_oh_patch_single.yml
-     when: patch.type == 'db_single'
-  environment:
-   ORACLE_BASE: "{{oracle_base}}"
-   ORACLE_HOME: "{{oracle_home}}"
-  become: True
-  become_user: "{{oracledb.user}}"
-  tags: patch      
+ - debug: var=_home
+ - debug: var=_patch
+# - name: Check OPatch version and update OPatch
+#   block:
+#     - shell:
+#        cmd: "{{oracle_home}}/OPatch/opatch lsinventory| grep 'OPatch version' | awk -F':' '{print $2}'"
+#       register: opatch_version
+#     - name: Compare version
+#       set_fact: 
+#         current_opatch_version: "{{opatch_version.stdout|trim}}"
+#     - include_tasks: update_opatch.yml
+#       when: current_opatch_version != opatch.version
+#   environment:
+#    ORACLE_BASE: "{{oracle_base}}"
+#    ORACLE_HOME: "{{oracle_home}}"
+#   become: True
+#   become_user: "{{oracledb.user}}"
+# - name:   Apply_oh_patch
+#   block:
+#    - include_tasks: apply_oh_patch_single.yml
+#      when: patch.type == 'db_single'
+#   environment:
+#    ORACLE_BASE: "{{oracle_base}}"
+#    ORACLE_HOME: "{{oracle_home}}"
+#   become: True
+#   become_user: "{{oracledb.user}}"
+#   tags: patch      
       
 
 

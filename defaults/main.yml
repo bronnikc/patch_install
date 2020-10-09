@@ -2,8 +2,22 @@
 # defaults file for oracle.opatch
 oracle_version:   "12.2"
 oracle_dbhome:  dbhome_1
+
 opatch:
  archive_url: "http://cloud.dcteam.ru/s/uhvM4SNYSkq4j0p/download"
  version: "12.2.0.1.21"
  backup_file:   '/tmp/OPatch.zip'
-type_patch: 'db_single'
+
+
+patch:
+ archive_url: "http://cloud.dcteam.ru/s/Ay5XufMvWFmXz2H/download"
+ type: 'db_single'
+ temp_dir: '/tmp'
+ patch_id: 31305382
+ patch_number: 31312468
+
+
+home:
+ oracle_dbhome:  dbhome_1
+ type_home: DB # GI vs DB
+ oracle_version: "12.2"
