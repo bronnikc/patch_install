@@ -1,6 +1,6 @@
 ---
 # defaults file for oracle.opatch
-type_install_patch: 'gi_install'#'db_single что применять opatchauto
+type_install_patch: 'db_single'#'db_single что применять opatchauto
 opatch_update: true
 
 opatch:
@@ -19,7 +19,7 @@ patch:
 
 
 home:
- oracle_dbhome: 
- oracle_base:
- type_home: GI # GI vs DB
+ oracle_dbhome: '/u01/app/oracle/product/12.2/{{ oracle_dbhome }}'
+ oracle_base: '/u01/app/oracle'
+ type_home: DB # GI vs DB
  oracle_version: "12.2"
