@@ -1,9 +1,11 @@
 ---
 
 _home:
-  oracle_base: "{{ home.oracle_base }}" 
+  oracle_base: "{% if home.type_home == 'DB' %}/u01/app/oracle{% else %}/u01/app/grid{% endif %}" 
+  oracle_home: "{% if home.type_home == 'DB' %}/u01/app/oracle/product/{{home.oracle_version}}/{{home.oracle_dbhome}}{% else %}/u01/app/{{home.oracle_version}}/grid{% endif %}"
+  #oracle_base: "{{ home.oracle_base }}" 
   #"{% if home.type_home == 'DB' %}/u01/app/oracle{% else %}/u01/app/grid{% endif %}"
-  oracle_home: "{{ home.oracle_dbhome }}" 
+  #oracle_home: "{{ home.oracle_dbhome }}" 
     #{% if home.type_home == 'DB' %}/u01/app/oracle/product/{{home.oracle_version}}/{{home.oracle_dbhome}}{% else %}/u01/app/{{home.oracle_version}}/grid{% endif %}",true)
 
 _patch: "{{ patch }}"

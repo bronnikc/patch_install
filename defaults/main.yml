@@ -19,7 +19,7 @@ patch:
 
 
 home:
- oracle_dbhome: '/u01/app/oracle/product/12.2/{{ oracle_dbhome }}'
- oracle_base: '/u01/app/oracle'
+ oracle_dbhome: '{{ oracle_dbhome }}'
+ #oracle_base: '/u01/app/oracle'
  type_home: DB # GI vs DB
  oracle_version: "12.2"
