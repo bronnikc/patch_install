@@ -1,6 +1,6 @@
 ---
 # defaults file for oracle.opatch
-type_install_patch: 'db_single'#'db_single что применять opatchauto
+#type_install_patch: 'db_single'#'gi_install,db_rac что применять opatchauto
 opatch_update: true
 
 opatch:

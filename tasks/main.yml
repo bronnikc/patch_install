@@ -1,4 +1,5 @@
 ---  
+ - debug: var=_home
  - name: Check OPatch version and update OPatch
    block:
      - shell:
@@ -22,6 +23,8 @@
       when: type_install_patch == 'gi_install' 
     - include_tasks: apply_oh_patch_single.yml
       when: type_install_patch == 'db_single'  
+    - include_tasks: rac_install.yml
+      when: type_install_patch == 'db_rac'  
    environment:
     ORACLE_BASE: "{{ _home.oracle_base }}"
     ORACLE_HOME: "{{ _home.oracle_home }}"   
