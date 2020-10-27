@@ -1,14 +1,14 @@
 ---
-- name: display output
+- name: display output for patch {{ _or_patch_debug._patch_num }} 
   debug: var=_or_patch_debug.stdout_lines|default([],true) 
   tags:
      - oracle_manage_patches_display_output 
-- name: display error
+- name: display error for patch {{ _or_patch_debug._patch_num }}
   debug: var=_or_patch_debug.stderr_lines|default([],true)
   when:  _or_patch_debug.stderr|default('',true) !='' or _or_patch_debug.rc|default(0,true) !=0
   tags:
     - oracle_manage_patches_display_output
-- name: asserts that errors found
+- name: asserts that errors found for patch {{ _or_patch_debug._patch_num }}
   assert:
    that: 
     - "_or_patch_debug.stderr|default('',true) == '' or _or_patch_debug.stderr|default('',true) == 'OPatch Session completed with warnings.'" 

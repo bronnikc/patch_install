@@ -1,5 +1,5 @@
 ---
-- name:  Install Patch
+- name:  Install Patch {{_patch.patch_id}}
   shell:
    cmd: '$ORACLE_HOME/OPatch/opatch apply -silent'
    chdir: '{{patch.temp_dir}}/{{patch.patch_id}}/{{_patch_num}}'
@@ -12,7 +12,8 @@
   ignore_errors: True
   become: true
   become_user: "{{ oracledb.user }}"
-- include_tasks: display_stdout_or_errors.yml
+- name: 'Check and outpup error installation of {{_patch.patch_id}}'
+  include_tasks: display_stdout_or_errors.yml
   vars:
     _or_patch_debug: "{{ _or_patch_installation_output }}" 
   with_items:

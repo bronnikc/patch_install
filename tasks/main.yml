@@ -2,10 +2,11 @@
  - debug: var=_home
  - name: Check OPatch version and update OPatch
    block:
-     - shell:
+     - name: Get version OPatch on home {{ _home.oracle_home }}
+       shell:
         cmd: "$ORACLE_HOME/OPatch/opatch lsinventory| grep 'OPatch version' | awk -F':' '{print $2}'"
        register: opatch_version
-     - name: Compare version
+     - name: Compare version Opatch
        set_fact: 
          current_opatch_version: "{{opatch_version.stdout|trim}}"
      - include_tasks: update_opatch.yml
@@ -18,10 +19,13 @@
    when: opatch_update
  - name: Patch installation
    block:
-    - include_tasks: unpack_and_check_patch.yml
-    - include_tasks: apply_gi_single.yml
+    - name: Include tasks for unpacking and check patch
+      include_tasks: unpack_and_check_patch.yml
+    - name: Include tasks for install patch on GI
+      include_tasks: apply_gi_single.yml
       when: type_install_patch == 'gi_install' 
-    - include_tasks: apply_oh_patch_single.yml
+    - name: Include tasks for install patch on DB
+      include_tasks: apply_oh_patch_single.yml
       when: type_install_patch == 'db_single'  
     - include_tasks: rac_install.yml
       when: type_install_patch == 'db_rac'  
