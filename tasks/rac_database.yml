@@ -2,11 +2,6 @@
 - name:  Install Patch {{_patch.patch_id}}
   shell:
    cmd: '$ORACLE_HOME/OPatch/opatchauto apply {{patch.temp_dir}}/{{patch.patch_id}} -oh $ORACLE_HOME'
-  with_items:
-   - '{{_patch.patch_number}}'
-  loop_control:
-   loop_var: _patch_num   
-   label: "[install patch {{ _patch_num }}]" 
   register: _or_patch_installation
   ignore_errors: True
   become: true
