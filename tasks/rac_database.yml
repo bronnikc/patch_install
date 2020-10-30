@@ -8,13 +8,8 @@
 - name: 'Check and outpup error installation of {{_patch.patch_id}}'
   include_tasks: display_stdout_or_errors.yml
   vars:
-    _or_patch_debug: "{{ _or_patch_installation_output }}" 
-  with_items:
-   - "{{ _or_patch_installation.results|default([],true) }}"  
-  loop_control:
-    loop_var: _or_patch_installation_output
-    label:  "[check error patch installation {{ _or_patch_installation_output._patch_num }}]"
-  when:  _or_patch_installation_output.rc|default(0,true) !=0  or _or_patch_installation_output.stderr|default('',true)|length > 0 or display_output
+    _or_patch_debug: "{{ _or_patch_installation }}" 
+  when:  _or_patch_installation.rc|default(0,true) !=0  or _or_patch_installation.stderr|default('',true)|length > 0 or display_output
        
  
 
