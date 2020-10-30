@@ -1,0 +1,25 @@
+---
+- name:  Install Patch {{_patch.patch_id}}
+  shell:
+   cmd: '$ORACLE_HOME/OPatch/opatchauto apply {{patch.temp_dir}}/{{patch.patch_id}} -oh $ORACLE_HOME'
+  with_items:
+   - '{{_patch.patch_number}}'
+  loop_control:
+   loop_var: _patch_num   
+   label: "[install patch {{ _patch_num }}]" 
+  register: _or_patch_installation
+  ignore_errors: True
+  become: true
+- name: 'Check and outpup error installation of {{_patch.patch_id}}'
+  include_tasks: display_stdout_or_errors.yml
+  vars:
+    _or_patch_debug: "{{ _or_patch_installation_output }}" 
+  with_items:
+   - "{{ _or_patch_installation.results|default([],true) }}"  
+  loop_control:
+    loop_var: _or_patch_installation_output
+    label:  "[check error patch installation {{ _or_patch_installation_output._patch_num }}]"
+  when:  _or_patch_installation_output.rc|default(0,true) !=0  or _or_patch_installation_output.stderr|default('',true)|length > 0
+       
+ 
+
