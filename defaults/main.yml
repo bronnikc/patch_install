@@ -3,7 +3,7 @@
 #type_install_patch: 'db_single'#'gi_install,db_rac что применять opatchauto
 opatch_update: true
 #display output opatch utility
-#display_output: false
+display_output: false
 opatch:
  archive_url: "http://cloud.dcteam.ru/s/uhvM4SNYSkq4j0p/download"
  version: "12.2.0.1.21"

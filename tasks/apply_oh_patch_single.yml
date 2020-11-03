@@ -21,6 +21,6 @@
   loop_control:
     loop_var: _or_patch_installation_output
     label:  "[check error patch installation {{ _or_patch_installation_output._patch_num }}]"
-  when:  _or_patch_installation_output.rc|default(0,true) !=0  or _or_patch_installation_output.stderr|default('',true)|length > 0
+  when:  _or_patch_installation_output.rc|default(0,true) !=0  or _or_patch_installation_output.stderr|default('',true)|length > 0 or display_output
        
  
